@@ -1,3 +1,4 @@
+// App.js
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { Wallet, Send, Loader2 } from "lucide-react";
@@ -6,17 +7,22 @@ import './App.css';
 
 function App() {
   const initialState = {
-    contractAddress: "0xBE46bA58D315f0d6cD37bd7F313ccBfdC760e891",
+    windowEthereum: false,
+    contractAddress: "0xYourContractAddressHere",
+    walletAddress: null,
     contractAbi: ABI.abi,
+    provider: null,
+    signer: null,
+    readContract: null,
+    writeContract: null,
+    isLoading: true,
+    balance: "0",
+    errorMessage: ""
   };
 
-  const [walletAddress, setWalletAddress] = useState(null);
-  const [balance, setBalance] = useState("0");
-  const [provider, setProvider] = useState(null);
-  const [signer, setSigner] = useState(null);
+  const [state, setState] = useState(initialState);
   const [receiverAddress, setReceiverAddress] = useState("");
   const [amount, setAmount] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [isTransacting, setIsTransacting] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
 
@@ -24,62 +30,80 @@ function App() {
     initializeWallet();
     return () => {
       if (window.ethereum?.removeListener) {
-        window.ethereum.removeListener("accountsChanged", handleReload);
-        window.ethereum.removeListener("chainChanged", handleReload);
+        window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        window.ethereum.removeListener("chainChanged", handleChainChanged);
       }
     };
   }, []);
 
-  const handleReload = () => window.location.reload();
+  const handleAccountsChanged = () => window.location.reload();
+  const handleChainChanged = () => window.location.reload();
 
   const initializeWallet = async () => {
     try {
       if (window.ethereum) {
-        const _provider = new ethers.providers.Web3Provider(window.ethereum);
-        await _provider.send("eth_requestAccounts", []);
-        const _signer = _provider.getSigner();
-        const _walletAddress = await _signer.getAddress();
-        const _balance = await _provider.getBalance(_walletAddress);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+        const walletAddress = await signer.getAddress();
 
-        setProvider(_provider);
-        setSigner(_signer);
-        setWalletAddress(_walletAddress);
-        setBalance(ethers.utils.formatEther(_balance));
-        setIsLoading(false);
+        const readContract = new ethers.Contract(
+          initialState.contractAddress,
+          initialState.contractAbi,
+          provider
+        );
 
-        window.ethereum.on("accountsChanged", handleReload);
-        window.ethereum.on("chainChanged", handleReload);
+        const writeContract = new ethers.Contract(
+          initialState.contractAddress,
+          initialState.contractAbi,
+          signer
+        );
+
+        const balanceInWei = await provider.getBalance(walletAddress);
+        const balance = ethers.utils.formatEther(balanceInWei);
+
+        setState(prev => ({
+          ...prev,
+          windowEthereum: true,
+          provider,
+          signer,
+          walletAddress,
+          readContract,
+          writeContract,
+          balance,
+          isLoading: false,
+        }));
       } else {
-        setToastMsg("MetaMask not detected.");
+        setState(prev => ({
+          ...prev,
+          errorMessage: "Please install MetaMask.",
+          isLoading: false,
+        }));
       }
     } catch (error) {
-      setToastMsg(error.message);
-      setIsLoading(false);
+      setState(prev => ({
+        ...prev,
+        errorMessage: error.message,
+        isLoading: false,
+      }));
     }
   };
 
-  const sendTransaction = async () => {
-    if (!receiverAddress || !amount) {
-      setToastMsg("Please enter address and amount.");
-      return;
-    }
-
+  const handleSend = async () => {
+    if (!receiverAddress || !amount) return;
+    setIsTransacting(true);
     try {
-      setIsTransacting(true);
-      const tx = await signer.sendTransaction({
+      const tx = await state.signer.sendTransaction({
         to: receiverAddress,
-        value: ethers.utils.parseEther(amount)
+        value: ethers.utils.parseEther(amount),
       });
-
       await tx.wait();
-      setToastMsg("✅ Transaction Successful!");
-      setReceiverAddress("");
+      setToastMsg("Transaction Successful ✅");
       setAmount("");
-
-      const updatedBalance = await provider.getBalance(walletAddress);
-      setBalance(ethers.utils.formatEther(updatedBalance));
+      setReceiverAddress("");
+      initializeWallet();
     } catch (error) {
-      setToastMsg("❌ Transaction Failed: " + error.message);
+      setToastMsg("Transaction Failed ❌");
     } finally {
       setIsTransacting(false);
       setTimeout(() => setToastMsg(""), 4000);
@@ -90,55 +114,36 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <div className="logo">
-          <Wallet size={28} />
+          <Wallet size={28} strokeWidth={2.5} />
           <h1>ETH Wallet</h1>
         </div>
-        {walletAddress && (
-          <div className="wallet-info">
-            <div className="address">Address: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</div>
-            <div className="balance">Balance: {balance} ETH</div>
-          </div>
-        )}
+        <div className="wallet-info">
+          <div className="address">Address: {state.walletAddress?.slice(0, 6)}...{state.walletAddress?.slice(-4)}</div>
+          <div className="balance">Balance: Ξ {Number(state.balance).toFixed(4)}</div>
+        </div>
       </header>
 
       <main className="main-content">
-        {isLoading ? (
-          <div className="loader">
-            <Loader2 className="spinner" />
-            <p>Loading Wallet...</p>
-          </div>
-        ) : (
-          <div className="card">
-            <h2>Send ETH</h2>
-            <input
-              type="text"
-              placeholder="Receiver Address"
-              value={receiverAddress}
-              onChange={(e) => setReceiverAddress(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Amount (ETH)"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-            <button onClick={sendTransaction} disabled={isTransacting}>
-              {isTransacting ? (
-                <>
-                  <Loader2 className="spinner" /> Sending...
-                </>
-              ) : (
-                <>
-                  <Send size={16} /> Send ETH
-                </>
-              )}
-            </button>
-            {toastMsg && <div className="toast">{toastMsg}</div>}
-          </div>
-        )}
+        <div className="card">
+          <h2>Send Ethereum</h2>
+          <input
+            type="text"
+            placeholder="Receiver Address"
+            value={receiverAddress}
+            onChange={(e) => setReceiverAddress(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Amount in ETH"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+          <button onClick={handleSend} disabled={isTransacting}>
+            {isTransacting ? <Loader2 className="spinner" /> : <><Send size={16} /> Send</>}
+          </button>
+          {toastMsg && <div className="toast">{toastMsg}</div>}
+        </div>
       </main>
     </div>
   );
 }
-
-export default App;

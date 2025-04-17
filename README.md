@@ -1,75 +1,56 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+# 🔐 Ethereum Wallet DApp
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple and stylish React-based Ethereum wallet DApp (Decentralized Application) that allows users to connect their MetaMask wallet, view their account balance, and send ETH to any Ethereum address using a deployed smart contract on the blockchain.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Features
 
-### `npm start`
+- ✅ Connect to MetaMask wallet
+- 💰 Display connected wallet address and ETH balance
+- 📤 Send ETH to another wallet address
+- 🔒 Interact with a deployed smart contract using Ethers.js
+- 💡 Clean, responsive, and modern UI
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🖥️ Technologies Used
 
-### `npm test`
+- [React](https://reactjs.org/)
+- [Ethers.js](https://docs.ethers.io/)
+- [MetaMask](https://metamask.io/)
+- [Lucide Icons](https://lucide.dev/)
+- [CSS Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🛠️ Installation & Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/eth-wallet-dapp.git
+   cd eth-wallet-dapp
+   
+   
+   
+📁 Project Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+eth-wallet/
+├── public/
+├── src/
+│   ├── App.js         # Main application component
+│   ├── App.css        # Application styles
+│   ├── contractJson/
+│   │   └── EtherTransaction.json # Compiled ABI from your smart contract
+├── package.json
+└── README.md
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+📜 License:-
+        This project is open-source and available under the MIT License.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+🤝 Contributing
+        Feel free to fork this repo, make improvements, and create a pull request. Suggestions and feedback are always welcome!
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-# ETH-Wallet-
-A simple decentralized wallet interface to send Ethereum using MetaMask. Connect your wallet, enter recipient details, and transfer ETH securely on the blockchain
->>>>>>> 431309c49eb9d8aeca7894dbec2a22d4cc954961
+💬 Contact:-
+        Created by Gokulan V 
