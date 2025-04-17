@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +69,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+# ETH-Wallet-
+A simple decentralized wallet interface to send Ethereum using MetaMask. Connect your wallet, enter recipient details, and transfer ETH securely on the blockchain
+>>>>>>> 431309c49eb9d8aeca7894dbec2a22d4cc954961
